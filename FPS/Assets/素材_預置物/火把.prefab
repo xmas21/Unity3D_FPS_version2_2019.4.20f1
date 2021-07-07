@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8154715508019538424}
   - component: {fileID: 7788396262592734680}
   - component: {fileID: 5128248953507416923}
-  - component: {fileID: 6901009664586368976}
+  - component: {fileID: 484095952092647064}
   m_Layer: 0
   m_Name: "\u706B\u628A"
   m_TagString: Untagged
@@ -82,8 +82,8 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &6901009664586368976
-MeshCollider:
+--- !u!65 &484095952092647064
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -92,10 +92,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: a572b7e4c3d8eb446823b4269e41cb5d, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 0.21161927, y: 0.6486732, z: 0.2553504}
+  m_Center: {x: 0, y: 0.085833445, z: 0.12773699}
 --- !u!1 &8774938143682382188
 GameObject:
   m_ObjectHideFlags: 0
@@ -121,7 +120,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8774938143682382188}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.0076, y: 0.3767, z: 0.255}
+  m_LocalPosition: {x: -0.0076, y: 0.3767, z: 0.332}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8154715508019538424}
@@ -139,7 +138,7 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 0.8584906, g: 0.6451014, b: 0.1579299, a: 1}
-  m_Intensity: 1.5
+  m_Intensity: 2
   m_Range: 8
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
