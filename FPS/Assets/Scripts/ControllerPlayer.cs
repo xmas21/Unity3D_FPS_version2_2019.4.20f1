@@ -18,15 +18,22 @@ public class ControllerPlayer : MonoBehaviour
     {
         GetMoveInput();
         GetTurnInput();
+
+        basePerson.Turn(v3Turn.y, -v3Turn.x);
     }
 
-    private void FixedUpdate() //有跟鋼體有關的都要採用FixedUpdate
+    /// <summary>
+    /// 有跟鋼體有關的都要採用FixedUpdate
+    /// </summary>
+    private void FixedUpdate()
     {
-        basePerson.Move(v3Move);
-        basePerson.Turn(v3Turn);
+        basePerson.Move(transform.forward * v3Move.z + transform.right * v3Move.x);
     }
 
-    private void GetMoveInput() // 偵測鍵盤輸入
+    /// <summary>
+    /// 偵測鍵盤輸入
+    /// </summary>
+    private void GetMoveInput()
     {
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
@@ -34,7 +41,10 @@ public class ControllerPlayer : MonoBehaviour
         v3Move.z = v;
     }
 
-    private void GetTurnInput() // 偵測滑鼠旋轉輸入
+    /// <summary>
+    /// 偵測滑鼠旋轉輸入
+    /// </summary>
+    private void GetTurnInput()
     {
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
