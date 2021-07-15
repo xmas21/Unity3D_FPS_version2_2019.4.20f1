@@ -8,10 +8,13 @@ public class ControllerPlayer : MonoBehaviour
     private Vector3 v3Move; // 移動的目標位置
     private Vector3 v3Turn; // 旋轉的目標位置
     private BasePerson basePerson;
+    private Transform tar_carema;
+
 
     private void Start()
     {
         basePerson = GetComponent<BasePerson>();
+        tar_carema = transform.Find("主攝影機");
     }
 
     private void Update()
@@ -19,6 +22,8 @@ public class ControllerPlayer : MonoBehaviour
         GetMoveInput();
         GetTurnInput();
 
+        Fire();
+        TurnCamera();
         basePerson.Turn(v3Turn.y, -v3Turn.x);
     }
 
@@ -50,5 +55,18 @@ public class ControllerPlayer : MonoBehaviour
         float mouseY = Input.GetAxis("Mouse Y");
         v3Turn.x = -mouseY;
         v3Turn.y = mouseX;
+    }
+
+    /// <summary>
+    /// 攝影機轉向
+    /// </summary>
+    private void TurnCamera()
+    {
+        tar_carema.LookAt(basePerson.target);
+    }
+
+    private void Fire()
+    {
+        if (Input.GetKey(KeyCode.Mouse0)) basePerson.Fire();
     }
 }
