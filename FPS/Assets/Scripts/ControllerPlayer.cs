@@ -1,20 +1,29 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// 玩家控制腳本
 /// </summary>
 public class ControllerPlayer : MonoBehaviour
 {
-    private Vector3 v3Move; // 移動的目標位置
-    private Vector3 v3Turn; // 旋轉的目標位置
-    private BasePerson basePerson;
-    private Transform tar_carema;
+    public float groundRadius = 0.3f;
+    public bool isGround;
+    public Vector3 v3Move; // 移動的目標位置
 
+    private Vector3 v3Turn; // 旋轉的目標位置
+    private Vector3 groundOffset;
+    private BasePerson basePerson;
+
+    private Transform tar_carema;
+    private Text bullet_current_Text;
+    private Text bullet_total_Text;
 
     private void Start()
     {
         basePerson = GetComponent<BasePerson>();
         tar_carema = transform.Find("主攝影機");
+        bullet_current_Text = GameObject.Find("當前彈量").GetComponent<Text>();
+        bullet_total_Text = GameObject.Find("總彈量").GetComponent<Text>();
     }
 
     private void Update()
@@ -23,8 +32,12 @@ public class ControllerPlayer : MonoBehaviour
         GetTurnInput();
 
         Fire();
+        Reload();
+        Jump();
+        CheckGround();
         TurnCamera();
         basePerson.Turn(v3Turn.y, -v3Turn.x);
+        UpdateBullet();
     }
 
     /// <summary>
@@ -33,6 +46,12 @@ public class ControllerPlayer : MonoBehaviour
     private void FixedUpdate()
     {
         basePerson.Move(transform.forward * v3Move.z + transform.right * v3Move.x);
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = new Color(0, 0, 1, 0.3f);
+        Gizmos.DrawSphere(transform.position + groundOffset, groundRadius);
     }
 
     /// <summary>
@@ -65,8 +84,49 @@ public class ControllerPlayer : MonoBehaviour
         tar_carema.LookAt(basePerson.target);
     }
 
+    /// <summary>
+    /// 開火
+    /// </summary>
     private void Fire()
     {
         if (Input.GetKey(KeyCode.Mouse0)) basePerson.Fire();
+    }
+
+    /// <summary>
+    /// 裝子彈
+    /// </summary>
+    private void Reload()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            basePerson.Reload_count();
+        }
+    }
+
+    /// <summary>
+    /// 跳躍
+    /// </summary>
+    private void Jump()
+    {
+        if (Input.GetKeyDown(KeyCode.Space)) basePerson.Jump();
+    }
+
+    /// <summary>
+    /// 檢查是否在地板上
+    /// </summary>
+    private void CheckGround()
+    {
+        Collider[] hit = Physics.OverlapSphere(transform.position + groundOffset, groundRadius, 1 << 8);
+
+        isGround = hit[0] && hit[0].name == "地板";
+    }
+
+    /// <summary>
+    /// 更新子彈資訊
+    /// </summary>
+    private void UpdateBullet()
+    {
+        bullet_current_Text.text = basePerson.bullet_Curret.ToString();
+        bullet_total_Text.text = basePerson.bullet_Total.ToString();
     }
 }

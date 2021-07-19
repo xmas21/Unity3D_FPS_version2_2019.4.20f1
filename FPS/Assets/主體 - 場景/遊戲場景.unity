@@ -20306,7 +20306,7 @@ GameObject:
   - component: {fileID: 2087372195}
   - component: {fileID: 2087372194}
   - component: {fileID: 2087372193}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: "\u5730\u677F"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21081,6 +21081,35 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1524082598, guid: b8ee537c74a21524b832c2c0d9565eae, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1409158410788501036, guid: b8ee537c74a21524b832c2c0d9565eae,
+        type: 3}
+      propertyPath: groundOffset.y
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1409158410788501037, guid: b8ee537c74a21524b832c2c0d9565eae,
+        type: 3}
+      propertyPath: jump
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1409158410788501037, guid: b8ee537c74a21524b832c2c0d9565eae,
+        type: 3}
+      propertyPath: no_ammo_Sound
+      value: 
+      objectReference: {fileID: 8300000, guid: 1a69aa4c040822c49ab9c6746eda8bf9, type: 3}
+    - target: {fileID: 3612036622231810786, guid: b8ee537c74a21524b832c2c0d9565eae,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3612036623289396969, guid: b8ee537c74a21524b832c2c0d9565eae,
+        type: 3}
+      propertyPath: m_Weight
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8789129240122752480, guid: b8ee537c74a21524b832c2c0d9565eae,
         type: 3}
       propertyPath: m_Name
@@ -21099,7 +21128,7 @@ PrefabInstance:
     - target: {fileID: 8789129240122752490, guid: b8ee537c74a21524b832c2c0d9565eae,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 8789129240122752490, guid: b8ee537c74a21524b832c2c0d9565eae,
         type: 3}
@@ -21140,6 +21169,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8789129240122752492, guid: b8ee537c74a21524b832c2c0d9565eae,
+        type: 3}
+      propertyPath: m_Mass
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8789129240122752495, guid: b8ee537c74a21524b832c2c0d9565eae,
+        type: 3}
+      propertyPath: m_Center.y
+      value: 0.82
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b8ee537c74a21524b832c2c0d9565eae, type: 3}

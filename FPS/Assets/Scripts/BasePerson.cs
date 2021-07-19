@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using UnityEngine.Animations.Rigging;
+using System.Collections;
 
 public class BasePerson : MonoBehaviour
 {
@@ -19,12 +21,20 @@ public class BasePerson : MonoBehaviour
 
     [Header("發射子彈位置")]
     public Transform fire_pos;
-    [Header("子彈")]
+    [Header("子彈物件")]
     public GameObject bullet;
     [Header("子彈速度"), Range(0, 3000)]
     public float bullet_speed = 1000;
-    [Header("子彈間隔"), Range(0, 1)]
+    [Header("開槍間隔"), Range(0, 1)]
     public float bullet_interval = 0.1f;
+    [Header("目前子彈數量"), Range(0, 1)]
+    public int bullet_Curret = 30;
+    [Header("彈夾數量"), Range(0, 1)]
+    public int bullet_Clip = 30;
+    [Header("總子彈數"), Range(0, 1)]
+    public int bullet_Total = 150;
+    [Header("空彈音效")]
+    public AudioClip no_ammo_Sound;
 
     [HideInInspector]
     public Transform target;
@@ -34,13 +44,11 @@ public class BasePerson : MonoBehaviour
     private float hpMax;                // 最大血量
     private float timerFire;            // 射擊計時器
     private bool ismove;                // 是否在移動
-    private int bullet_Curret = 30;     // 目前子彈數量
-    private int bullet_Clip = 30;       // 彈莢數量
-    private int bullet_Total = 150;     // 總子彈
 
     private Rigidbody rig;
     private AudioSource aud;
     private AudioClip fire_Sound;
+    private Rig rigging;
 
     private void Start()
     {
@@ -49,7 +57,23 @@ public class BasePerson : MonoBehaviour
 
     private void Update()
     {
+        print(rig.velocity.x);
+        print(rig.velocity.z);
         AnimatorMove();
+    }
+
+    /// <summary>
+    /// 換彈設定布林直
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator Reloading()
+    {
+        rigging.weight = 0.2f;
+        ani.SetBool("換彈開關", true);
+        yield return new WaitForSeconds(ani.GetCurrentAnimatorStateInfo(0).length * 0.9f);
+
+        ani.SetBool("換彈開關", false);
+        rigging.weight = 1;
     }
 
     /// <summary>
@@ -79,6 +103,65 @@ public class BasePerson : MonoBehaviour
     }
 
     /// <summary>
+    /// 開槍
+    /// </summary>
+    public void Fire()
+    {
+        if (ani.GetBool("換彈開關")) return;
+
+        if (timerFire < bullet_interval) timerFire += Time.deltaTime;
+        else
+        {
+            if (bullet_Curret > 0)
+            {
+                bullet_Curret--;
+                timerFire = 0;
+                aud.PlayOneShot(fire_Sound, Random.Range(0.3f, 1f));
+                GameObject tempBullet = Instantiate(bullet, fire_pos.position, Quaternion.identity);
+                tempBullet.GetComponent<Rigidbody>().AddForce(-fire_pos.forward * bullet_speed);
+            }
+            else
+            {
+                aud.PlayOneShot(no_ammo_Sound, Random.Range(0.3f, 0.8f));
+                timerFire = 0;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 換彈夾
+    /// </summary>
+    public void Reload_count()
+    {
+        if (bullet_Curret == bullet_Clip || bullet_Total == 0) return;
+
+        StartCoroutine(Reloading());
+
+        int bulletGetCount = bullet_Clip - bullet_Curret;
+
+        if (bullet_Total >= bulletGetCount)
+        {
+            bullet_Total -= bulletGetCount;
+            bullet_Curret += bulletGetCount;
+        }
+        else
+        {
+            bullet_Curret += bullet_Total;
+            bullet_Total = 0;
+        }
+    }
+
+    /// <summary>
+    /// 跳躍
+    /// </summary>
+    public void Jump()
+    {
+        rigging.weight = 0;
+        rig.AddForce(0, jump, 0);
+        ani.SetBool("跳躍開關", true);
+    }
+
+    /// <summary>
     /// 抓取元件
     /// </summary>
     private void GetC()
@@ -86,6 +169,7 @@ public class BasePerson : MonoBehaviour
         ani = GetComponent<Animator>();
         rig = GetComponent<Rigidbody>();
         aud = GetComponent<AudioSource>();
+        rigging = transform.GetChild(4).GetComponent<Rig>();
         target = transform.Find("目標物件");
         fire_Sound = aud.clip;
     }
@@ -96,19 +180,6 @@ public class BasePerson : MonoBehaviour
     private void AnimatorMove()
     {
         if (rig.velocity.x != 0 || rig.velocity.z != 0) ismove = true;
-        // ani.SetBool("走路觸發", ismove);
-    }
-
-    public void Fire()
-    {
-        if (timerFire < bullet_interval) timerFire += Time.deltaTime;
-        else
-        {
-            bullet_Curret--;
-            timerFire = 0;
-            aud.PlayOneShot(fire_Sound, Random.Range(0.3f, 1f));
-            GameObject tempBullet = Instantiate(bullet, fire_pos.position, Quaternion.identity);
-            tempBullet.GetComponent<Rigidbody>().AddForce(-fire_pos.forward * bullet_speed);
-        }
+        //ani.SetBool("走路觸發", ismove);
     }
 }
