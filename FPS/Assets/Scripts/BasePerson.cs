@@ -35,6 +35,9 @@ public class BasePerson : MonoBehaviour
     public int bullet_Total = 150;
     [Header("空彈音效")]
     public AudioClip no_ammo_Sound;
+    [Header("檢查地板")]
+    public float groundRadius = 0.5f;
+    public Vector3 groundOffset;
 
     [HideInInspector]
     public Transform target;
@@ -44,6 +47,7 @@ public class BasePerson : MonoBehaviour
     private float hpMax;                // 最大血量
     private float timerFire;            // 射擊計時器
     private bool ismove;                // 是否在移動
+    private bool isGround;
 
     private Rigidbody rig;
     private AudioSource aud;
@@ -57,9 +61,14 @@ public class BasePerson : MonoBehaviour
 
     private void Update()
     {
-        print(rig.velocity.x);
-        print(rig.velocity.z);
+        CheckGround();
         AnimatorMove();
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = new Color(1, 0, 0, 0.3f);
+        Gizmos.DrawSphere(transform.position + groundOffset, groundRadius);
     }
 
     /// <summary>
@@ -68,8 +77,10 @@ public class BasePerson : MonoBehaviour
     /// <returns></returns>
     private IEnumerator Reloading()
     {
-        rigging.weight = 0.2f;
         ani.SetBool("換彈開關", true);
+        rigging.weight = 0.2f;
+
+        // ani.GetCurrentAnimatorStateInfo(0).length 取得圖層 0 目前動畫的長度
         yield return new WaitForSeconds(ani.GetCurrentAnimatorStateInfo(0).length * 0.9f);
 
         ani.SetBool("換彈開關", false);
@@ -156,9 +167,32 @@ public class BasePerson : MonoBehaviour
     /// </summary>
     public void Jump()
     {
-        rigging.weight = 0;
-        rig.AddForce(0, jump, 0);
-        ani.SetBool("跳躍開關", true);
+        if (isGround)
+        {
+            rigging.weight = 0;
+            rig.AddForce(0, jump, 0);
+            CancelInvoke();
+            Invoke("RestoreWeight", 0.8f);
+        }
+    }
+
+    /// <summary>
+    /// 回復權重
+    /// </summary>
+    private void RestoreWeight()
+    {
+        rigging.weight = 1;
+    }
+
+    /// <summary>
+    /// 檢查是否在地板上
+    /// </summary>
+    private void CheckGround()
+    {
+        Collider[] hit = Physics.OverlapSphere(transform.position + groundOffset, groundRadius, 1 << 8);
+
+        isGround = hit.Length > 0 && hit[0].name == "地板" ? true : false;
+        ani.SetBool("跳躍開關", !isGround);
     }
 
     /// <summary>
@@ -169,7 +203,7 @@ public class BasePerson : MonoBehaviour
         ani = GetComponent<Animator>();
         rig = GetComponent<Rigidbody>();
         aud = GetComponent<AudioSource>();
-        rigging = transform.GetChild(4).GetComponent<Rig>();
+        rigging = transform.GetChild(3).GetComponent<Rig>();
         target = transform.Find("目標物件");
         fire_Sound = aud.clip;
     }
@@ -179,7 +213,6 @@ public class BasePerson : MonoBehaviour
     /// </summary>
     private void AnimatorMove()
     {
-        if (rig.velocity.x != 0 || rig.velocity.z != 0) ismove = true;
-        //ani.SetBool("走路觸發", ismove);
+        ani.SetBool("走路開關", rig.velocity.x != 0 || rig.velocity.z != 0);
     }
 }

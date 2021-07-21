@@ -38,8 +38,8 @@ ModelImporter:
       name: "\u4E3B\u89D2 - \u8DF3"
       takeName: mixamo.com
       internalID: 0
-      firstFrame: 0
-      lastFrame: 40
+      firstFrame: 1.6
+      lastFrame: 36.8
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

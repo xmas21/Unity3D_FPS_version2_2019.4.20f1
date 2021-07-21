@@ -6,12 +6,9 @@ using UnityEngine.UI;
 /// </summary>
 public class ControllerPlayer : MonoBehaviour
 {
-    public float groundRadius = 0.3f;
-    public bool isGround;
     public Vector3 v3Move; // 移動的目標位置
 
     private Vector3 v3Turn; // 旋轉的目標位置
-    private Vector3 groundOffset;
     private BasePerson basePerson;
 
     private Transform tar_carema;
@@ -28,16 +25,16 @@ public class ControllerPlayer : MonoBehaviour
 
     private void Update()
     {
+        UpdateBullet();
         GetMoveInput();
         GetTurnInput();
 
+        TurnCamera();
         Fire();
         Reload();
         Jump();
-        CheckGround();
-        TurnCamera();
+
         basePerson.Turn(v3Turn.y, -v3Turn.x);
-        UpdateBullet();
     }
 
     /// <summary>
@@ -46,12 +43,6 @@ public class ControllerPlayer : MonoBehaviour
     private void FixedUpdate()
     {
         basePerson.Move(transform.forward * v3Move.z + transform.right * v3Move.x);
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = new Color(0, 0, 1, 0.3f);
-        Gizmos.DrawSphere(transform.position + groundOffset, groundRadius);
     }
 
     /// <summary>
@@ -109,16 +100,6 @@ public class ControllerPlayer : MonoBehaviour
     private void Jump()
     {
         if (Input.GetKeyDown(KeyCode.Space)) basePerson.Jump();
-    }
-
-    /// <summary>
-    /// 檢查是否在地板上
-    /// </summary>
-    private void CheckGround()
-    {
-        Collider[] hit = Physics.OverlapSphere(transform.position + groundOffset, groundRadius, 1 << 8);
-
-        isGround = hit[0] && hit[0].name == "地板";
     }
 
     /// <summary>
