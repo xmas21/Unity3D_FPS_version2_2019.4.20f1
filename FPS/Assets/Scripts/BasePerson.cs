@@ -54,6 +54,7 @@ public class BasePerson : MonoBehaviour
     private AudioClip fire_Sound;
     private Rig rigging;
 
+
     private void Start()
     {
         GetC();
@@ -61,6 +62,8 @@ public class BasePerson : MonoBehaviour
 
     private void Update()
     {
+        //print(rig.velocity.y);
+        //print(rig.velocity.x);
         CheckGround();
         AnimatorMove();
     }
@@ -93,7 +96,7 @@ public class BasePerson : MonoBehaviour
     /// <param name="movePosition">要移動到的位置</param>
     public void Move(Vector3 movePosition)
     {
-        rig.MovePosition(transform.position + movePosition * move_speed);
+        rig.MovePosition(transform.position + movePosition * move_speed * Time.deltaTime);
     }
 
     /// <summary>
@@ -202,6 +205,7 @@ public class BasePerson : MonoBehaviour
     {
         ani = GetComponent<Animator>();
         rig = GetComponent<Rigidbody>();
+       // rig.constraints = RigidbodyConstraints.FreezePositionY;
         aud = GetComponent<AudioSource>();
         rigging = transform.GetChild(3).GetComponent<Rig>();
         target = transform.Find("目標物件");
@@ -213,6 +217,6 @@ public class BasePerson : MonoBehaviour
     /// </summary>
     private void AnimatorMove()
     {
-        ani.SetBool("走路開關", rig.velocity.x != 0 || rig.velocity.z != 0);
+        ani.SetBool("走路觸發", rig.velocity.x != 0 || rig.velocity.z != 0);
     }
 }

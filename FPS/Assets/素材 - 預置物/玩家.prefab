@@ -625,7 +625,7 @@ GameObject:
   - component: {fileID: 3204305519604019688}
   - component: {fileID: 3204305519604019691}
   - component: {fileID: 3204305519604019690}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: "\u73A9\u5BB6"
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -665,7 +665,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 116
   m_CollisionDetection: 0
 --- !u!95 &3204305519604019684
 Animator:
@@ -821,7 +821,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bd64628cad1fcd40aa6effdb789ce3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  move_speed: 0.3
+  move_speed: 10
   LR_speed: 160
   UD_speed: 1.3
   jump: 1000
@@ -847,7 +847,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3204305519604019693}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b2d8418b0b9634b1892b0268dd9c2743, type: 3}
   m_Name: 

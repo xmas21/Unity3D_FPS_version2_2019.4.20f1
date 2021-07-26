@@ -789,6 +789,7 @@ GameObject:
   - component: {fileID: 1242850694420176341}
   - component: {fileID: 1242850694420176340}
   - component: {fileID: 4917401165914772274}
+  - component: {fileID: 5734530265471287872}
   m_Layer: 0
   m_Name: "\u6575\u4EBA"
   m_TagString: Player
@@ -828,7 +829,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 116
   m_CollisionDetection: 0
 --- !u!95 &1242850694420176346
 Animator:
@@ -971,10 +972,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bd64628cad1fcd40aa6effdb789ce3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  move_speed: 0.3
+  move_speed: 5
   LR_speed: 160
   UD_speed: 1.3
-  jump: 1000
+  jump: 0
   hp: 100
   attack: 20
   target_limit: {x: 0, y: 3}
@@ -1127,9 +1128,9 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1242850694420176339}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 0.23
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -1138,10 +1139,28 @@ NavMeshAgent:
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 2
+  m_Height: 1.62
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &5734530265471287872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1242850694420176339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1da88b9ec9af4a4b9cfc38966fb2249, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 0
+  v2Idle_to_Random: {x: 1, y: 4}
+  radiusRandom: 20
+  turn_speed: 10
+  check_cube_offset_forward: 11
+  check_cube_size: {x: 5, y: 5, z: 20}
 --- !u!1 &1242850694449228166
 GameObject:
   m_ObjectHideFlags: 0
