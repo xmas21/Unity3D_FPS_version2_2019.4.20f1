@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Animations.Rigging;
 using System.Collections;
 
@@ -19,6 +20,9 @@ public class BasePerson : MonoBehaviour
     [Header("限制攝影機上下位置")]
     public Vector2 target_limit = new Vector2(-0.5f, 3);
 
+    [Header("角色類型")]
+    public PeopleType type;
+
     [Header("發射子彈位置")]
     public Transform fire_pos;
     [Header("子彈物件")]
@@ -37,15 +41,23 @@ public class BasePerson : MonoBehaviour
     public AudioClip no_ammo_Sound;
     [Header("檢查地板")]
     public float groundRadius = 0.5f;
+    [Header("地板檢查位置")]
     public Vector3 groundOffset;
+    [Header("受傷事件")]
+    public UnityEvent onHit;
 
     [HideInInspector]
     public Transform target;
     [HideInInspector]
     public Animator ani;
+    [HideInInspector]
+    public bool isDead = false;
+
 
     private float hpMax;                // 最大血量
     private float timerFire;            // 射擊計時器
+    private float damage;
+
     private bool ismove;                // 是否在移動
     private bool isGround;
 
@@ -72,6 +84,15 @@ public class BasePerson : MonoBehaviour
     {
         Gizmos.color = new Color(1, 0, 0, 0.3f);
         Gizmos.DrawSphere(transform.position + groundOffset, groundRadius);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.name.Contains("子彈"))
+        {
+            if (collision.contacts[0].thisCollider.GetType() == typeof(SphereCollider)) Hit(100);
+            Hit(collision.gameObject.GetComponent<Bullet>().damage);
+        }
     }
 
     /// <summary>
@@ -132,6 +153,10 @@ public class BasePerson : MonoBehaviour
                 timerFire = 0;
                 aud.PlayOneShot(fire_Sound, Random.Range(0.3f, 1f));
                 GameObject tempBullet = Instantiate(bullet, fire_pos.position, Quaternion.identity);
+
+                tempBullet.AddComponent<Bullet>().damage = damage;
+                Physics.IgnoreCollision(GetComponent<Collider>(), tempBullet.GetComponent<Collider>());
+
                 tempBullet.GetComponent<Rigidbody>().AddForce(-fire_pos.forward * bullet_speed);
             }
             else
@@ -205,7 +230,7 @@ public class BasePerson : MonoBehaviour
     {
         ani = GetComponent<Animator>();
         rig = GetComponent<Rigidbody>();
-       // rig.constraints = RigidbodyConstraints.FreezePositionY;
+        // rig.constraints = RigidbodyConstraints.FreezePositionY;
         aud = GetComponent<AudioSource>();
         rigging = transform.GetChild(3).GetComponent<Rig>();
         target = transform.Find("目標物件");
@@ -218,5 +243,38 @@ public class BasePerson : MonoBehaviour
     private void AnimatorMove()
     {
         ani.SetBool("走路觸發", rig.velocity.x != 0 || rig.velocity.z != 0);
+    }
+
+    /// <summary>
+    /// 受傷
+    /// </summary>
+    /// <param name="damage">傷害直</param>
+    private void Hit(float damage)
+    {
+        hp -= damage;
+
+        if (hp <= 0) Dead();
+
+        onHit.Invoke();
+    }
+
+    /// <summary>
+    /// 死亡
+    /// </summary>
+    private void Dead()
+    {
+        hp = 0;
+        ani.SetBool("死亡觸發", true);
+        rigging.weight = 0;
+        isDead = true;
+        GetComponent<SphereCollider>().enabled = false;
+        GetComponent<CapsuleCollider>().enabled = false;
+        rig.velocity = Vector3.zero;
+        rig.constraints = RigidbodyConstraints.FreezeAll;
+
+        GameManager.instance.DetectDead(type);
+        GameManager.isGameover = true;
+
+        enabled = false;
     }
 }

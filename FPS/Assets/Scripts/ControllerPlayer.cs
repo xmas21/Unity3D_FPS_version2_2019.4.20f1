@@ -14,21 +14,31 @@ public class ControllerPlayer : MonoBehaviour
     private Transform tar_carema;
     private Text bullet_current_Text;
     private Text bullet_total_Text;
+    private Text hp_Text;
+    private Image hp_Bar;
+
+    private float hpMax;
 
     private void Start()
     {
+        Cursor.visible = false;
         basePerson = GetComponent<BasePerson>();
         tar_carema = transform.Find("主攝影機");
         bullet_current_Text = GameObject.Find("當前彈量").GetComponent<Text>();
         bullet_total_Text = GameObject.Find("總彈量").GetComponent<Text>();
+        hp_Text = GameObject.Find("生命值").GetComponent<Text>();
+        hp_Bar = GameObject.Find("血條上").GetComponent<Image>();
+        hpMax = basePerson.hp;
     }
 
     private void Update()
     {
+        if (basePerson.isDead) return;
+
+        UpdateValue();
         UpdateBullet();
         GetMoveInput();
         GetTurnInput();
-
         TurnCamera();
         Fire();
         Reload();
@@ -37,11 +47,19 @@ public class ControllerPlayer : MonoBehaviour
         basePerson.Turn(v3Turn.y, -v3Turn.x);
     }
 
+    public void UpdateValue()
+    {
+        hp_Bar.fillAmount = basePerson.hp / hpMax;
+        hp_Text.text = basePerson.hp.ToString("f0");
+    }
+
     /// <summary>
     /// 有跟鋼體有關的都要採用FixedUpdate
     /// </summary>
     private void FixedUpdate()
     {
+        if (basePerson.isDead) return;
+
         basePerson.Move(transform.forward * v3Move.z + transform.right * v3Move.x);
     }
 

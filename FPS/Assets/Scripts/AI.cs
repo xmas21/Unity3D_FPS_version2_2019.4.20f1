@@ -43,16 +43,17 @@ public class AI : MonoBehaviour
 
     private void Update()
     {
+        if (basePerson.isDead) return;
+
         CheckState();
         if (CheckPlayerInCube() && state != stateAI.Fire) state = stateAI.Track;
     }
 
     private void FixedUpdate()
     {
-        if (is_random_walking)
-        {
-            basePerson.Move(transform.forward);
-        }
+        if (basePerson.isDead) return;
+
+        if (is_random_walking) basePerson.Move(transform.forward);
     }
 
     private void OnDrawGizmos()
@@ -141,6 +142,8 @@ public class AI : MonoBehaviour
             {
                 posMove = Vector3.MoveTowards(transform.position, random_position, 1);
 
+                basePerson.ani.SetBool("走路觸發", true);
+
                 LookTarget(posMove);
             }
             else
@@ -195,10 +198,10 @@ public class AI : MonoBehaviour
     private void Track()
     {
         is_random_walking = false;
+        basePerson.ani.SetBool("走路觸發", false);
 
         Quaternion anglelook = LookTarget(player.position);
         float angle = Quaternion.Angle(transform.rotation, anglelook);
-        print(angle);
 
         if (angle <= angle_Fire) state = stateAI.Fire;
 
@@ -210,19 +213,29 @@ public class AI : MonoBehaviour
     private void Fire()
     {
         LookTarget(player.position);
-        basePerson.Fire();
 
-        if (timerFire < fire_interval)
+        if (basePerson.bullet_Curret == 0)
         {
-            timerFire += Time.deltaTime;
+            basePerson.Reload_count();
         }
         else
         {
-            Vector3 posTargerPoint = basePerson.target.position;
-            posTargerPoint.y += (float)(Random.Range(-0.5f, 0.5f) + fire_offset);
-            posTargerPoint.y = Mathf.Clamp(posTargerPoint.y, fire_limit.x, fire_limit.y);
-            basePerson.fire_pos.localPosition = posTargerPoint;
-            timerFire = 0;
+            basePerson.ani.SetBool("走路觸發", false);
+
+            basePerson.Fire();
+
+            if (timerFire < fire_interval)
+            {
+                timerFire += Time.deltaTime;
+            }
+            else
+            {
+                Vector3 posTargerPoint = basePerson.target.position;
+                posTargerPoint.y += (float)(Random.Range(-0.5f, 0.5f) * fire_offset);
+                posTargerPoint.y = Mathf.Clamp(posTargerPoint.y, fire_limit.x, fire_limit.y);
+                basePerson.fire_pos.localPosition = posTargerPoint;
+                timerFire = 0;
+            }
         }
     }
 }
