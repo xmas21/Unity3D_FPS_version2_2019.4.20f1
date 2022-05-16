@@ -263,17 +263,18 @@ public class BasePerson : MonoBehaviour
     /// </summary>
     private void Dead()
     {
+        GameManager.isGameover = true;
+        GameManager.instance.DetectDead(type);
+
         hp = 0;
         ani.SetBool("死亡觸發", true);
         rigging.weight = 0;
         isDead = true;
+
         GetComponent<SphereCollider>().enabled = false;
         GetComponent<CapsuleCollider>().enabled = false;
         rig.velocity = Vector3.zero;
         rig.constraints = RigidbodyConstraints.FreezeAll;
-
-        GameManager.instance.DetectDead(type);
-        GameManager.isGameover = true;
 
         enabled = false;
     }

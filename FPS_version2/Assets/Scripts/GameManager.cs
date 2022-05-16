@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         AI_Count = GameObject.FindGameObjectsWithTag("敵人").Length;
+        if (Input.GetKey(KeyCode.P)) DetectDead(PeopleType.ai);
         ReplayGame();
         Quit();
     }
@@ -43,7 +44,7 @@ public class GameManager : MonoBehaviour
                 StartCoroutine(ShowFinal("你死亡了"));
                 break;
             case PeopleType.ai:
-                if (AI_Count == 0) StartCoroutine(ShowFinal("您勝利了"));
+                StartCoroutine(ShowFinal("您勝利了"));
                 break;
             default:
                 break;
@@ -63,8 +64,8 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < 20; i++)
         {
             group_Fianl.alpha += 0.05f;
-            yield return new WaitForSeconds(0.02f);
         }
+        yield return new WaitForSeconds(0.02f);
     }
 
     private void ReplayGame()
@@ -76,7 +77,6 @@ public class GameManager : MonoBehaviour
     {
         if (isGameover && Input.GetKeyDown(KeyCode.Escape)) Application.Quit();
     }
-
 }
 
 public enum PeopleType

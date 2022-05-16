@@ -22,6 +22,7 @@ public class ControllerPlayer : MonoBehaviour
     private void Start()
     {
         Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
         basePerson = GetComponent<BasePerson>();
         tar_carema = transform.Find("主攝影機");
         bullet_current_Text = GameObject.Find("當前彈量").GetComponent<Text>();
